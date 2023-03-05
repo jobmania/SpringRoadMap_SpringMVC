@@ -17,6 +17,10 @@ public class RequestBodyStringServlet extends HttpServlet {
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletInputStream inputStream = request.getInputStream(); // 바이트 코드로 얻어옴
-        StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8); // 바이트를 문자로 변환할때 항상 인코딩을 알려줘야함
+        String messageBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);// 바이트를 문자로 변환할때 항상 인코딩을 알려줘야함
+
+        System.out.println(messageBody);
+
+        response.getWriter().write("ok");
     }
 }
