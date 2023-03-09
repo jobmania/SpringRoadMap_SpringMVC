@@ -20,6 +20,13 @@ public class MyView {
         dispatcher.forward(request,response);
     }
 
-    public void render(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) {
+    public void render(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        modelToRequestAttribute(model, request); // 모델에 담긴 객체를 request.Atrribute에저장..
+        RequestDispatcher dispatcher = request.getRequestDispatcher(viewPath);
+        dispatcher.forward(request,response);
+    }
+
+    private void modelToRequestAttribute(Map<String, Object> model, HttpServletRequest request) {
+        model.forEach( (key, value) -> request.setAttribute(key,value));
     }
 }

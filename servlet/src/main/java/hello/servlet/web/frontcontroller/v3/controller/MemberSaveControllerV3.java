@@ -12,7 +12,7 @@ public class MemberSaveControllerV3 implements ControllerV3 {
     @Override
     public ModelView process(Map<String, String> paramMap) {
         String username = paramMap.get("username");
-        int age = Integer.parseInt(paramMap.get("age"));
+        int age = Integer.parseInt(paramMap.get("age")); // 문자로 오기때문에~
 
         Member member = new Member(username, age);
         memberRepository.saved(member);

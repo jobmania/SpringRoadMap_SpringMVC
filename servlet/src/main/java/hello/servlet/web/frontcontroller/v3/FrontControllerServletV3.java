@@ -2,7 +2,6 @@ package hello.servlet.web.frontcontroller.v3;
 
 import hello.servlet.web.frontcontroller.ModelView;
 import hello.servlet.web.frontcontroller.MyView;
-import hello.servlet.web.frontcontroller.v2.ControllerV2;
 import hello.servlet.web.frontcontroller.v3.controller.MemberFormControllerV3;
 import hello.servlet.web.frontcontroller.v3.controller.MemberListControllerV3;
 import hello.servlet.web.frontcontroller.v3.controller.MemberSaveControllerV3;
@@ -16,7 +15,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-//front-controller/v2/members/new-form
+//front-controller/v3/members/new-form
 @WebServlet(name = "frontControllerServletV3", urlPatterns = "/front-controller/v3/*")
 public class FrontControllerServletV3 extends HttpServlet {
     private Map<String, ControllerV3> controllerMap = new HashMap<>();
@@ -42,14 +41,12 @@ public class FrontControllerServletV3 extends HttpServlet {
         Map<String, String> paramMap = createParamMap(request);
 
         ModelView mv = controller.process(paramMap);
+
+        // new-form
         String viewName = mv.getViewName();  // 논리 이름 new-form
-        MyView view = viewResolver(viewName);
+        MyView view = viewResolver(viewName); // Myview 반환!
 
         view.render(mv.getModel(), request,response);
-    }
-
-    private  MyView viewResolver(String viewName) {
-        return new MyView("/WEB-INF/views/" + viewName + ".jsp");
     }
 
     private  Map<String, String> createParamMap(HttpServletRequest request) {
@@ -57,5 +54,9 @@ public class FrontControllerServletV3 extends HttpServlet {
         request.getParameterNames().asIterator()
                 .forEachRemaining(paramName -> paramMap.put(paramName, request.getParameter(paramName)));
         return paramMap;
+    }
+
+    private  MyView viewResolver(String viewName) {
+        return new MyView("/WEB-INF/views/" + viewName + ".jsp");
     }
 }
