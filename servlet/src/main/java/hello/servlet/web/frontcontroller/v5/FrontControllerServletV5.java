@@ -2,12 +2,14 @@ package hello.servlet.web.frontcontroller.v5;
 
 import hello.servlet.web.frontcontroller.ModelView;
 import hello.servlet.web.frontcontroller.MyView;
-import hello.servlet.web.frontcontroller.v3.ControllerV3;
 import hello.servlet.web.frontcontroller.v3.controller.MemberFormControllerV3;
 import hello.servlet.web.frontcontroller.v3.controller.MemberListControllerV3;
 import hello.servlet.web.frontcontroller.v3.controller.MemberSaveControllerV3;
-import hello.servlet.web.frontcontroller.v4.ControllerV4;
+import hello.servlet.web.frontcontroller.v4.controller.MemberFormControllerV4;
+import hello.servlet.web.frontcontroller.v4.controller.MemberListControllerV4;
+import hello.servlet.web.frontcontroller.v4.controller.MemberSaveControllerV4;
 import hello.servlet.web.frontcontroller.v5.adator.ControllerV3HandlerAdaptor;
+import hello.servlet.web.frontcontroller.v5.adator.ControllerV4HandlerAdaptor;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -33,18 +35,24 @@ public class FrontControllerServletV5 extends HttpServlet {
 
     private void initHandlerAdapters() {
         handlerAdaptors.add(new ControllerV3HandlerAdaptor());
+        handlerAdaptors.add(new ControllerV4HandlerAdaptor());
     }
 
     private void initHandlerMappingMap() {
         handlerMappingMap.put("/front-controller/v5/v3/members/new-form", new MemberFormControllerV3());
         handlerMappingMap.put("/front-controller/v5/v3/members/save", new MemberSaveControllerV3());
         handlerMappingMap.put("/front-controller/v5/v3/members", new MemberListControllerV3());
+        // v4 추가!!
+        handlerMappingMap.put("/front-controller/v5/v4/members/new-form", new MemberFormControllerV4());
+        handlerMappingMap.put("/front-controller/v5/v4/members/save", new MemberSaveControllerV4());
+        handlerMappingMap.put("/front-controller/v5/v4/members", new MemberListControllerV4());
     }
 
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         //MemberFormControllerV3()
+        //MemberFormControllerV4());
         Object handler = getHandler(request); // handlermapping.get
 
         if(handler == null){
@@ -69,6 +77,7 @@ public class FrontControllerServletV5 extends HttpServlet {
 
     private MyHandlerAdaptor getHandelrAdapter(Object handler) {
         //MemberFormControllerV3()
+        //MemberFormControllerV4());
         for (MyHandlerAdaptor adapter : handlerAdaptors) {
             if(adapter.supports(handler)){
                return adapter;
