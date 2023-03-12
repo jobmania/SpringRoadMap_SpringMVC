@@ -53,6 +53,7 @@ public class FrontControllerServletV5 extends HttpServlet {
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         //MemberFormControllerV3()
         //MemberFormControllerV4());
+        // 1. 핸들러 조회
         Object handler = getHandler(request); // handlermapping.get
 
         if(handler == null){
@@ -60,8 +61,8 @@ public class FrontControllerServletV5 extends HttpServlet {
             return;
         }
 
-        // 1. 핸들러 조회  2. 핸들러 어뎁터 조회
-        MyHandlerAdaptor adaptor = getHandelrAdapter(handler); // ControllerV3HandlerAdaptor
+        // 2. 핸들러 어뎁터 조회
+        MyHandlerAdaptor adaptor = getHandlerAdapter(handler); // ControllerV3HandlerAdaptor
         // 3. 핸들(handler) 4. handle 호출  5. 모델 뷰 반환
         ModelView mv = adaptor.handle(request, response, handler);
 
@@ -75,7 +76,7 @@ public class FrontControllerServletV5 extends HttpServlet {
         return new MyView("/WEB-INF/views/" + viewName + ".jsp");
     }
 
-    private MyHandlerAdaptor getHandelrAdapter(Object handler) {
+    private MyHandlerAdaptor getHandlerAdapter(Object handler) {
         //MemberFormControllerV3()
         //MemberFormControllerV4());
         for (MyHandlerAdaptor adapter : handlerAdaptors) {
