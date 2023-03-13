@@ -4,8 +4,7 @@ import hello.servlet.domain.memeber.Member;
 import hello.servlet.domain.memeber.MemberRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,12 +16,14 @@ import java.util.List;
 public class SpringMemberControllerV3 {
     private MemberRepository memberRepository = MemberRepository.getInstance();
 
-    @RequestMapping("/new-form")
+//    @RequestMapping(value = "/new-form",method = RequestMethod.GET)
+    @GetMapping("/new-form")
     public String newForm(){
         return "new-form";
     }
 
-    @RequestMapping("/save")
+//    @RequestMapping(value = "/save",method = RequestMethod.POST)
+    @PostMapping("/save")
     public String save(
             @RequestParam("username") String username,
             @RequestParam("age") int age,
@@ -35,7 +36,8 @@ public class SpringMemberControllerV3 {
         return "save-result";
     }
 
-    @RequestMapping
+//    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public String members(Model model) {
         List<Member> members = memberRepository.findAll();
         model.addAttribute("members", members);
