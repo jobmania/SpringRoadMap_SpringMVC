@@ -53,7 +53,7 @@ public class FrontControllerServletV5 extends HttpServlet {
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         //MemberFormControllerV3()
         //MemberFormControllerV4());
-        // 1. 핸들러 조회
+        // 1. 핸들러 조회(url)
         Object handler = getHandler(request); // handlermapping.get
 
         if(handler == null){
