@@ -16,8 +16,9 @@ public class LogTestController {
 
     @RequestMapping("/log-test")
     public String logTest(){
-        String name = "Spring";
 
+        String name = "Spring";
+        String abc = "abc"
         System.out.println("name = " + name); /// ->
 
         // 로그 레벨 단계 ->
