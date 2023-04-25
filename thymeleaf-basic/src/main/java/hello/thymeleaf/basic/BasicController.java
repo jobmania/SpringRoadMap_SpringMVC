@@ -98,6 +98,21 @@ public class BasicController {
     }
 
 
+    @GetMapping("/each")
+    public String each(Model model){
+        addUsers(model);
+        return "basic/each";
+    }
+
+
+    private void addUsers(Model model){
+        List<User> list = new ArrayList<>();
+        list.add(new User("USERA", 10));
+        list.add(new User("USERB", 20));
+        list.add(new User("USERC", 30));
+        list.add(new User("USERD", 40));
+        model.addAttribute("users", list);
+    }
 
     @Component("helloBean")
     static class HelloBean {
@@ -105,6 +120,7 @@ public class BasicController {
             return "Hello " + data;
         }
     }
+
 
 
 
