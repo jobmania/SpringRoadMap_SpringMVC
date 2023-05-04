@@ -2,6 +2,7 @@ package hello.itemservice.web.form;
 
 import hello.itemservice.domain.item.Item;
 import hello.itemservice.domain.item.ItemRepository;
+import hello.itemservice.domain.item.ItemType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,7 @@ public class FormItemController {
 
     private final ItemRepository itemRepository;
 
+    // controller 요청올때마다 항상 추가!
     @ModelAttribute("regions")
     public Map<String, String> regions(){
         Map<String, String> regions = new LinkedHashMap<>();
@@ -28,6 +30,12 @@ public class FormItemController {
         regions.put("BUSAN", "부산");
         regions.put("JEJU", "제주");
         return regions;
+    }
+
+
+    @ModelAttribute("itemTypes")
+    public ItemType[] itemTypes(){
+        return ItemType.values();  // 배열로 반환.
     }
 
 
@@ -53,10 +61,12 @@ public class FormItemController {
         return "form/addForm";
     }
 
+    // 상품 추가시 새로고침하여도 다시 추가가 안되게 ~
     @PostMapping("/add")
     public String addItem(@ModelAttribute Item item, RedirectAttributes redirectAttributes) {
         log.info("item.open={}", item.getOpen());
         log.info("item.regions={}", item.getRegions());
+        log.info("item.itemType={}", item.getItemType());
         Item savedItem = itemRepository.save(item);
         redirectAttributes.addAttribute("itemId", savedItem.getId());
         redirectAttributes.addAttribute("status", true);
