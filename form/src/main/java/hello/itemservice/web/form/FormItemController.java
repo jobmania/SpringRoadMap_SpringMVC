@@ -1,5 +1,6 @@
 package hello.itemservice.web.form;
 
+import hello.itemservice.domain.item.DeliveryCode;
 import hello.itemservice.domain.item.Item;
 import hello.itemservice.domain.item.ItemRepository;
 import hello.itemservice.domain.item.ItemType;
@@ -10,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +24,7 @@ public class FormItemController {
 
     private final ItemRepository itemRepository;
 
-    // controller 요청올때마다 항상 추가!
+    // controller 요청올때마다 항상 추가! -> static 형식으로 만드는게 메모리 절약!
     @ModelAttribute("regions")
     public Map<String, String> regions(){
         Map<String, String> regions = new LinkedHashMap<>();
@@ -32,11 +34,21 @@ public class FormItemController {
         return regions;
     }
 
-
     @ModelAttribute("itemTypes")
     public ItemType[] itemTypes(){
         return ItemType.values();  // 배열로 반환.
     }
+
+    @ModelAttribute("deliveryCodes")
+    public List<DeliveryCode> deliveryCodes(){
+        List<DeliveryCode> deliveryCodes = new ArrayList<>();
+        deliveryCodes.add(new DeliveryCode("FAST", "빠른배송"));
+        deliveryCodes.add(new DeliveryCode("NORMAL", "일반배송"));
+        deliveryCodes.add(new DeliveryCode("SLOW", "느린배송"));
+        return deliveryCodes;
+    }
+
+
 
 
     @GetMapping
