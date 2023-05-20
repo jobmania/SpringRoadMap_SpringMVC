@@ -197,6 +197,8 @@ public class ValidationItemControllerV2 {
             // model에 담기는 오브젝트, 필드명 , 오류 메시지
 //            bindingResult.addError(new FieldError("item","itemName",item.getItemName(),false,new String[]{"required.item.itemName"},null,null));
             bindingResult.rejectValue("itemName","required");
+            // 디테일 먼저 찾고 -> 범용
+//            new String[]{"required.item.itemName", "required"};
         }
 
         if(item.getPrice() == null || item.getPrice() < 1000 || item.getPrice() > 1000000){
