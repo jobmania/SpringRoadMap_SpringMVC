@@ -10,6 +10,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
+import org.springframework.validation.ValidationUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -192,14 +193,23 @@ public class ValidationItemControllerV2 {
         log.info("target={}",bindingResult.getTarget());
 
 
+        // 디테일 먼저 찾고 -> 범용
+//            new String[]{"required.item.itemName", "required"};
+
+        // 검증 로직 (공백, 빈칸) 편하게 구현
+        ValidationUtils.rejectIfEmptyOrWhitespace(bindingResult,"itemName","required");
+
         // 검증 로직
         if(!StringUtils.hasText(item.getItemName())){
             // model에 담기는 오브젝트, 필드명 , 오류 메시지
 //            bindingResult.addError(new FieldError("item","itemName",item.getItemName(),false,new String[]{"required.item.itemName"},null,null));
             bindingResult.rejectValue("itemName","required"); // codes rejc
-            // 디테일 먼저 찾고 -> 범용
-//            new String[]{"required.item.itemName", "required"};
         }
+
+
+
+
+
 
         if(item.getPrice() == null || item.getPrice() < 1000 || item.getPrice() > 1000000){
 //            bindingResult.addError(new FieldError("item","price", item.getPrice(),false,new String[]{"range.item.price"},new Object[]{1000,1000000},null));
