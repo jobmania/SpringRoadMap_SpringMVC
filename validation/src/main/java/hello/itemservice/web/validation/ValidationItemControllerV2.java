@@ -188,16 +188,21 @@ public class ValidationItemControllerV2 {
                             RedirectAttributes redirectAttributes
             ,Model model) {
 
+        if(bindingResult.hasErrors()){
+            log.info("objectName={}",bindingResult.getObjectName());
+            log.info("target={}",bindingResult.getTarget());
+            return "validation/v2/addForm";
+        }
 
-        log.info("objectName={}",bindingResult.getObjectName());
-        log.info("target={}",bindingResult.getTarget());
+
+
 
 
         // 디테일 먼저 찾고 -> 범용
 //            new String[]{"required.item.itemName", "required"};
 
         // 검증 로직 (공백, 빈칸) 편하게 구현
-        ValidationUtils.rejectIfEmptyOrWhitespace(bindingResult,"itemName","required");
+//        ValidationUtils.rejectIfEmptyOrWhitespace(bindingResult,"itemName","required");
 
         // 검증 로직
         if(!StringUtils.hasText(item.getItemName())){
