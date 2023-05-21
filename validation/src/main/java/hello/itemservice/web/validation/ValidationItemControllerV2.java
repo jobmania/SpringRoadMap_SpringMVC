@@ -196,7 +196,7 @@ public class ValidationItemControllerV2 {
         if(!StringUtils.hasText(item.getItemName())){
             // model에 담기는 오브젝트, 필드명 , 오류 메시지
 //            bindingResult.addError(new FieldError("item","itemName",item.getItemName(),false,new String[]{"required.item.itemName"},null,null));
-            bindingResult.rejectValue("itemName","required");
+            bindingResult.rejectValue("itemName","required"); // codes rejc
             // 디테일 먼저 찾고 -> 범용
 //            new String[]{"required.item.itemName", "required"};
         }
