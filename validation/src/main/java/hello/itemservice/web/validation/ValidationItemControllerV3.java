@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -49,6 +50,14 @@ public class ValidationItemControllerV3 {
                             RedirectAttributes redirectAttributes
             , Model model) {
 
+        // 특정 필드가 아닌 복합 룰 검증
+        if (item.getPrice() != null && item.getQuantity() != null) {
+            int resultPrice = item.getPrice() * item.getQuantity();
+            if (resultPrice < 10000) {
+                bindingResult.addError(new ObjectError("item", new String[]{"totalPriceMin"}, new Object[]{10000, resultPrice}, null));
+            }
+        }
+
 
         // 검증에 실패시 다시 입력 로직으로 가기
         if (bindingResult.hasErrors()) {
@@ -72,7 +81,24 @@ public class ValidationItemControllerV3 {
     }
 
     @PostMapping("/{itemId}/edit")
-    public String edit(@PathVariable Long itemId, @ModelAttribute Item item) {
+    public String edit( @PathVariable Long itemId, @Validated @ModelAttribute Item item ,  BindingResult bindingResult) {
+
+        // 특정 필드가 아닌 복합 룰 검증
+        if (item.getPrice() != null && item.getQuantity() != null) {
+            int resultPrice = item.getPrice() * item.getQuantity();
+            if (resultPrice < 10000) {
+                bindingResult.addError(new ObjectError("item", new String[]{"totalPriceMin"}, new Object[]{10000, resultPrice}, null));
+            }
+        }
+
+        // 검증에 실패시 다시 입력 로직으로 가기
+        if (bindingResult.hasErrors()) {
+            log.info("bindingResult={}", bindingResult);
+            // binding result는 자동으로 model에 담긴다!
+            return "validation/v3/editForm";
+        }
+
+
         itemRepository.update(itemId, item);
         return "redirect:/validation/v3/items/{itemId}";
     }
