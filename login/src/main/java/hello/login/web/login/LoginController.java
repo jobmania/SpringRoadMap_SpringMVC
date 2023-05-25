@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
 @Controller
 @RequiredArgsConstructor
 public class LoginController {
@@ -23,7 +26,7 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String login(@Validated @ModelAttribute LoginForm form, BindingResult bindingResult){
+    public String login(@Validated @ModelAttribute LoginForm form, BindingResult bindingResult, HttpServletResponse response){
 
         if(bindingResult.hasErrors()){
             return "login/loginForm";
@@ -37,9 +40,25 @@ public class LoginController {
             return "login/loginForm";
         }
 
-        // 성공 TODO
+        // 성공 처리 ;
 
+        // 쿠기 설정
+        // 쿠키 시간 설정, 설정하지 않을 시 세션쿠키(브라우저 종료시 모두종료)
+        Cookie idCookie = new Cookie("memberId", String.valueOf(loginMember.getId()));
+        response.addCookie(idCookie);
         return "redirect:/";
     }
 
+
+    @PostMapping("/logout")
+    public String logout(HttpServletResponse response){
+        expireCookie(response,"memberId");
+        return "redirect:/";
+    }
+
+    private void expireCookie(HttpServletResponse response,String cookieName) {
+        Cookie cookie = new Cookie(cookieName, null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+    }
 }
