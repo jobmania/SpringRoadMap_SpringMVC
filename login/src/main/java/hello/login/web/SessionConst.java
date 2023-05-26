@@ -1,4 +1,5 @@
 package hello.login.web;
 
-public class SessionConst {
+public interface SessionConst {
+     String LOGIN_MEMBER = "loginMember";
 }

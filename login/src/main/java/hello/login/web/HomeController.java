@@ -9,8 +9,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Slf4j
 @Controller
@@ -44,7 +46,7 @@ public class HomeController {
 
 
 
-    @GetMapping("/")
+//    @GetMapping("/")
     public String homeLoginV2(HttpServletRequest request, Model model) {
 
         // 세션 관리자에 저장되 ㄴ회원 정보 조회
@@ -56,6 +58,46 @@ public class HomeController {
         }
 
         model.addAttribute("member", member);
+        return "loginHome";
+
+    }
+
+
+
+//    @GetMapping("/")
+    public String homeLoginV3(HttpServletRequest request, Model model) {
+
+        HttpSession session = request.getSession(false);// 처음 들어온 사용자는 세션을 만들면 안된다.
+
+        // 로그인
+        if(session==null){
+            return "home";
+        }
+
+        Member loginMember =(Member) session.getAttribute(SessionConst.LOGIN_MEMBER);
+
+        //세션에 값이 없다면 home으로!!
+        if(loginMember==null){
+            return "home";
+        }
+
+        // 세션이 유지되면 로그인 홈으로 이동
+        model.addAttribute("member", loginMember);
+        return "loginHome";
+
+    }
+
+    @GetMapping("/")
+    public String homeLoginV3Spring(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false)Member loginMember, Model model) {
+
+
+        //세션에 값이 없다면 home으로!!
+        if(loginMember==null){
+            return "home";
+        }
+
+        // 세션이 유지되면 로그인 홈으로 이동
+        model.addAttribute("member", loginMember);
         return "loginHome";
 
     }

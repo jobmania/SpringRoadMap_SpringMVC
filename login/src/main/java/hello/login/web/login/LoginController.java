@@ -3,6 +3,7 @@ package hello.login.web.login;
 import hello.login.domain.login.LoginService;
 import hello.login.domain.member.Member;
 import hello.login.domain.member.MemberRepository;
+import hello.login.web.SessionConst;
 import hello.login.web.session.SessionManager;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @Controller
 @RequiredArgsConstructor
@@ -81,7 +83,7 @@ public class LoginController {
 
 
     @PostMapping("/login")
-    public String loginV3(@Validated @ModelAttribute LoginForm form, BindingResult bindingResult, HttpServletResponse response){
+    public String loginV3(@Validated @ModelAttribute LoginForm form, BindingResult bindingResult, HttpServletRequest request){
 
         if(bindingResult.hasErrors()){
             return "login/loginForm";
@@ -95,12 +97,14 @@ public class LoginController {
             return "login/loginForm";
         }
 
-        // 성공 처리 ;
+        // 로그인 성공 처리 로직
+        // 세션이 있다면 세션반환, 없다면 신규 세션을 반환한다.
+        HttpSession session = request.getSession(); /// getSession(true) default: true
+        // 세션이 로그인 회원 정보를 보관
+        session.setAttribute(SessionConst.LOGIN_MEMBER,loginMember);
 
 
-        
         // 세션 관리자를 이용해서 세션  생성, 회원 데이터를 보관!!
-        sessionManager.createSession(loginMember,response);
 
 
         return "redirect:/";
@@ -112,9 +116,19 @@ public class LoginController {
         return "redirect:/";
     }
 
-    @PostMapping("/logout")
+//    @PostMapping("/logout")
     public String logoutV2(HttpServletRequest request){
         sessionManager.expire(request);
+        return "redirect:/";
+    }
+
+    @PostMapping("/logout")
+    public String logoutV3(HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        if(session!=null){
+            session.invalidate(); // 세션 delete
+        }
+
         return "redirect:/";
     }
 
