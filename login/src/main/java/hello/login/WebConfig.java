@@ -1,4 +1,3 @@
-package hello.login;
 
 import hello.login.web.filter.LogFilter;
 import hello.login.web.filter.LoginCheckFilter;
@@ -41,4 +40,5 @@ public class WebConfig implements WebMvcConfigurer {
 
         return filterRegistrationBean;
     }
+package hello.login;
 }
