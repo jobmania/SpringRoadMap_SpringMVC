@@ -136,7 +136,7 @@ public class LoginController {
 
         // 세션 관리자를 이용해서 세션  생성, 회원 데이터를 보관!!
 
-
+        // 로그인성공후 이전 요청 url로 슝!
         return "redirect:"+redirectURL;
     }
 
