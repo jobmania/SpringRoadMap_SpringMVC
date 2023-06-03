@@ -6,16 +6,21 @@ import hello.upload.domain.UploadFile;
 import hello.upload.file.FileStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.buf.UriUtil;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.util.UriUtils;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Slf4j
@@ -62,7 +67,31 @@ public class ItemController {
     public Resource downloadImage(@PathVariable String filename) throws MalformedURLException {
         // "file: 파일경로/uuid.png
         // 경로를 접근해서 스트림으로 반환한다.
+
+        // 보안 체크 로직도 추가하며 ㄴ좋다!
        return new UrlResource("file:" + fileStore.getFullPath(filename));
+    }
+
+    @GetMapping("/attach/{itemId}")
+    public ResponseEntity<Resource> downloadAttach(@PathVariable Long itemId) throws MalformedURLException {
+        // 아무나 접근을 할 수없게 접근권한을 제한
+        Item item = itemRepository.findById(itemId);
+        String storeFileName = item.getAttachFile().getStoreFileName();
+        String uploadFileName = item.getAttachFile().getUploadFileName();
+
+        UrlResource resource = new UrlResource("file:" + fileStore.getFullPath(storeFileName));
+
+        log.info("uploadFileName={}",uploadFileName);
+
+        // 인코딩 (한글이 인코딩 안될수 있음)
+        String encodeUploadFileName = UriUtils.encode(uploadFileName, StandardCharsets.UTF_8);
+
+        // 다운로드 헤더 규약
+        String contentDisposition = "attachment; filename=\"" + encodeUploadFileName + "\"";
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION,contentDisposition)
+                .body(resource);
     }
 
 }
